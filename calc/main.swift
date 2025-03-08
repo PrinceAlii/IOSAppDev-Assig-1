@@ -19,7 +19,12 @@ args.removeFirst() // remove the name of the program
 // Initialize a Calculator object
 let calculator = Calculator();
 
-// Calculate the result
-let result = calculator.add(no1: 1, no2: 1);
-
-print(result)
+// take in the args from the command line and the split each element into an array
+if let input = readLine() {
+    
+    let arguments = input.split(separator: " ").map { String($0) }
+    
+    let result = calculator.calculate(args: arguments);
+    
+    print(result);
+}
