@@ -23,20 +23,43 @@ class Calculator {
     ///
     /// - Warning: The result may yield Int overflow.
     /// - SeeAlso: https://developer.apple.com/documentation/swift/int/2884663-addingreportingoverflow
-    func add(no1: Float, no2: Float) -> Float {
+    func add(no1: Int, no2: Int) -> Int {
         return no1 + no2;
     }
     
-    func multiply(no1: Float, no2: Float) -> Float {
+    func multiply(no1: Int, no2: Int) -> Int {
         return no1 * no2;
     }
     
-    func subtract(no1: Float, no2: Float) -> Float {
+    func subtract(no1: Int, no2: Int) -> Int {
         return no1 - no2;
     }
     
     func calculate(args: [String]) -> String {
-        // Todo: Calculate Result from the arguments. Replace dummyResult with your actual result;
-        return "Success!";
+        
+        var result = Int(args[0]) ?? 0
+        var i = 1
+        
+        while i < args.count {
+            let operatorSign = args[i];
+            let nextValue = Int(args[i + 1]) ?? 0
+            
+            switch operatorSign {
+                
+                case "+":
+                    result = add(no1: result, no2: nextValue)
+                    
+                case "-":
+                    result = subtract(no1: result, no2: nextValue)
+                    
+                default:
+                    return "Error Operato: \(operatorSign) unknown"
+                
+            }
+            
+            i += 2
+        }
+        
+        return String(result);
     }
 }
