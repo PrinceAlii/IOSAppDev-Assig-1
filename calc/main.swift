@@ -16,5 +16,10 @@ let calculator = Calculator()
 
 let result = calculator.calculate(args: args)
 
+// if the output is an error, print it to standard error and exit with a non zero exit code (for tests)
+if result.starts(with: "| ERROR |") {
+    fputs(result + "\n", stderr)
+    exit(1)
+}
 
 print(result)

@@ -44,8 +44,32 @@ class Calculator {
         return no2 == 0 ? nil : no1 % no2
     }
     
+    func validateIntegers(_ str: String) -> Bool {
+        // check if input contains valid numbers
+        let validIntegers = CharacterSet(charactersIn: "0123456789-")
+        if str.rangeOfCharacter(from: validIntegers.inverted) != nil {
+            return false
+        }
+        
+        // check if the input is within the max range for the Int type
+        if let num = Int(str) {
+            return num <= Int.max && num >= Int.min
+        }
+        
+        return false // number is not valid if it can't convert
+    }
+    
     func calculate(args: [String]) -> String {
         var element = args
+        
+        // check that every element that isn't an operator can be parsed as an int. if not throw an error
+        for arg in element {
+            if !["+", "-", "x", "/", "%"].contains(arg) {
+                if Int(arg) == nil {
+                    return "| ERROR | Invalid input: \(arg)"
+                }
+            }
+        }
         
         var i = 0
         
@@ -55,34 +79,35 @@ class Calculator {
             
             if op == "x" || op == "/" || op == "%" {
                 
-                guard let left = Int(element[i - 1]),
+                // check that there is a valid integer on the left and right of every operator
+                guard i - 1 >= 0, i + 1 < element.count,
+                      let left = Int(element[i - 1]),
                       let right = Int(element[i + 1])
                 else {
                     return "| ERROR | Invalid input"
                 }
                 
-                
-                var result: Int?
+                var currentResult: Int?
                 switch element[i] {
                     
                 case "x":
-                    result = multiply(no1: left, no2: right)
+                    currentResult = multiply(no1: left, no2: right)
                     
                 case "/":
-                    result = divide(no1: left, no2: right)
+                    currentResult = divide(no1: left, no2: right)
                     
                 case "%":
-                    result = modulus(no1: left, no2: right)
+                    currentResult = modulus(no1: left, no2: right)
                     
                 default:
-                    return "| ERROR | Unknown operato \(op)"
+                    return "| ERROR | Unknown operator \(op)"
                 }
                 
-                if result == nil {
+                if currentResult == nil {
                     return "| ERROR | Division by 0."
                 }
                 
-                element[i - 1] = String(result!)
+                element[i - 1] = String(currentResult!)
                 element.remove(at: i)
                 element.remove(at: i)
                 i -= 1
@@ -92,7 +117,7 @@ class Calculator {
         }
         
         // addition and subtraction
-        var result = Int(element[0]) ?? 0
+        var currentResult = Int(element[0]) ?? 0
         i = 1
         while i < element.count {
             let op = element[i]
@@ -100,12 +125,12 @@ class Calculator {
             
             switch op {
             case "+":
-                result = add(no1: result, no2: nextValue)
+                currentResult = add(no1: currentResult, no2: nextValue)
                 
             case "-":
-                result = subtract(no1: result, no2: nextValue)
+                currentResult = subtract(no1: currentResult, no2: nextValue)
                 
-            default: 
+            default:
                 return "| ERROR | Unknown operato \(op)"
                 
             }
@@ -113,6 +138,6 @@ class Calculator {
             i += 2
         }
         
-        return String(result)
+        return String(currentResult)
     }
 }
