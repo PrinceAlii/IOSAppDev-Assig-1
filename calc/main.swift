@@ -11,20 +11,10 @@ import Foundation
 var args = ProcessInfo.processInfo.arguments
 args.removeFirst() // remove the name of the program
 
-// Retrieve User Input
-//let no1 = args[0]; // Sample Code Only! Update Required!
-//let operator = args[1]; // Sample Code Only! Update Required!
-//let no2 = args[2]; // Sample Code Only! Update Required!
+// Initialize a calculator object
+let calculator = Calculator()
 
-// Initialize a Calculator object
-let calculator = Calculator();
+let result = calculator.calculate(args: args)
 
-// take in the args from the command line and the split each element into an array
-if let input = readLine() {
-    
-    let arguments = input.split(separator: " ").map { String($0) }
-    
-    let result = calculator.calculate(args: arguments);
-    
-    print(result);
-}
+
+print(result)

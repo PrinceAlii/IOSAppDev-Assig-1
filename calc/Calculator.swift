@@ -45,41 +45,68 @@ class Calculator {
     }
     
     func calculate(args: [String]) -> String {
+        var element = args
         
-        var result = Int(args[0]) ?? 0
-        var i = 1
+        var i = 0
         
-        while i < args.count {
-            let operatorSign = args[i]
-            let nextValue = Int(args[i + 1]) ?? 0
+        // division and multiplication
+        while i < element.count {
+            let op = element[i]
             
-            switch operatorSign {
+            if op == "x" || op == "/" || op == "%" {
                 
+                guard let left = Int(element[i - 1]),
+                      let right = Int(element[i + 1])
+                else {
+                    return "| ERROR | Invalid input"
+                }
+                
+                
+                var result: Int?
+                switch element[i] {
+                    
+                case "x":
+                    result = multiply(no1: left, no2: right)
+                    
+                case "/":
+                    result = divide(no1: left, no2: right)
+                    
+                case "%":
+                    result = modulus(no1: left, no2: right)
+                    
+                default:
+                    return "| ERROR | Unknown operato \(op)"
+                }
+                
+                if result == nil {
+                    return "| ERROR | Division by 0."
+                }
+                
+                element[i - 1] = String(result!)
+                element.remove(at: i)
+                element.remove(at: i)
+                i -= 1
+            }
+            
+            i += 1
+        }
+        
+        // addition and subtraction
+        var result = Int(element[0]) ?? 0
+        i = 1
+        while i < element.count {
+            let op = element[i]
+            let nextValue = Int(element[i + 1]) ?? 0
+            
+            switch op {
             case "+":
                 result = add(no1: result, no2: nextValue)
                 
             case "-":
                 result = subtract(no1: result, no2: nextValue)
                 
-            case "*":
-                result = multiply(no1: result, no2: nextValue)
-                
-            case "/":
-                if let divResult = divide(no1: result, no2: nextValue) {
-                    result = divResult
-                } else {
-                    return "| ERROR | Division by zero."
-                }
-                
-            case "%":
-                if let modulusResult = modulus(no1: result, no2: nextValue) {
-                    result = modulusResult
-                } else {
-                    return "| ERROR | Modulus by zero."
-                }
-                
-            default:
-                return "| ERROR | Operato: \(operatorSign) unknown"
+            default: 
+                return "| ERROR | Unknown operato \(op)"
                 
             }
             
