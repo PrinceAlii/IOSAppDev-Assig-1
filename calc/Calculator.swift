@@ -23,16 +23,25 @@ class Calculator {
     ///
     /// - Warning: The result may yield Int overflow.
     /// - SeeAlso: https://developer.apple.com/documentation/swift/int/2884663-addingreportingoverflow
+    
     func add(no1: Int, no2: Int) -> Int {
-        return no1 + no2;
+        return no1 + no2
     }
     
     func multiply(no1: Int, no2: Int) -> Int {
-        return no1 * no2;
+        return no1 * no2
     }
     
     func subtract(no1: Int, no2: Int) -> Int {
-        return no1 - no2;
+        return no1 - no2
+    }
+    
+    func divide(no1: Int, no2: Int) -> Int? {
+        return no2 == 0 ? nil : no1 / no2
+    }
+    
+    func modulus(no1: Int, no2: Int) -> Int? {
+        return no2 == 0 ? nil : no1 % no2
     }
     
     func calculate(args: [String]) -> String {
@@ -41,25 +50,42 @@ class Calculator {
         var i = 1
         
         while i < args.count {
-            let operatorSign = args[i];
+            let operatorSign = args[i]
             let nextValue = Int(args[i + 1]) ?? 0
             
             switch operatorSign {
                 
-                case "+":
-                    result = add(no1: result, no2: nextValue)
-                    
-                case "-":
-                    result = subtract(no1: result, no2: nextValue)
-                    
-                default:
-                    return "Error Operato: \(operatorSign) unknown"
+            case "+":
+                result = add(no1: result, no2: nextValue)
+                
+            case "-":
+                result = subtract(no1: result, no2: nextValue)
+                
+            case "*":
+                result = multiply(no1: result, no2: nextValue)
+                
+            case "/":
+                if let divResult = divide(no1: result, no2: nextValue) {
+                    result = divResult
+                } else {
+                    return "| ERROR | Division by zero."
+                }
+                
+            case "%":
+                if let modulusResult = modulus(no1: result, no2: nextValue) {
+                    result = modulusResult
+                } else {
+                    return "| ERROR | Modulus by zero."
+                }
+                
+            default:
+                return "| ERROR | Operato: \(operatorSign) unknown"
                 
             }
             
             i += 2
         }
         
-        return String(result);
+        return String(result)
     }
 }
